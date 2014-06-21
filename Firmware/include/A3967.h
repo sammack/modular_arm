@@ -28,6 +28,11 @@ SOFTWARE. */
 // Email: samtmackenzie@gmail.com
 //-------------------------------------------------------------------------
 
+
+#ifndef A3967_H
+#define A3967_H
+
+
 // ******     Pin assignments      *********
 
 #define stepper_MS1_pin          GPIO_Pin_8
@@ -42,3 +47,23 @@ SOFTWARE. */
 // *********** constants ***********
 
 #define kStepperMax     256
+#define kStepDelay      5
+
+// ****** Function Prototypes **** 
+
+// configure the stepper motor GPIO pins
+void ConfigStepper();
+// home the stepper motor against the limit switch
+void HomeStepper();
+// Enable the Stepper motor so it can be moved
+void EnableStepper();
+// Disable the Stepper motor so that it cannot be moved
+void DisableStepper();
+// return the position of the stepper motor
+uint16_t GetStepperPosition();
+// Move the Stepper motor to a position
+void MoveStepperToPosition(uint16_t stepper_position_target);
+
+
+#endif
+

@@ -32,13 +32,14 @@ SOFTWARE. */
 #include "stm32f0xx.h"
 #include  "A3967.h"
 #include "GlobalDefinitions.h"
+#include "utility.h"
 
 
 //-----------------------------------------------------------------------------
 // PRIVATE VARIABLES
 //------------------------------------------------------------------------------
 
-uint16_t stepper_position = 0x0FFF
+uint16_t stepper_position = 0xFFFF;
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTION DEFINITIONS
@@ -72,17 +73,37 @@ void ConfigStepper(){
   
 // Home the Stepper motor
 // Stepps the motor in reverse until it reaches the limit switch,
-// This is then set as the zero position in the StepperLocation
+// This is then set as the zero position in the stepper_position
+void HomeStepper(){
+  while(GPIO_ReadInputDataBit(stepper_PORT, stepper_nLIMIT_pin)){
+    GPIO_SetBits(stepper_PORT, stepper_STEP_pin);
+    wait_us(kStepDelay);
+    GPIO_ResetBits(stepper_PORT, stepper_STEP_pin);
+    wait_us(kStepDelay); 
+  }
+    stepper_position = 0;
+}
 
-
-// Enable the Stepper motor by reseting the stepper_nENABLE_pin
-inline void EnableStepper(){
+// Enable the Stepper motor by reseting the stepper_nENABLE_pin 
+void EnableStepper(){
   GPIO_ResetBits(stepper_PORT, stepper_nENABLE_pin);
 }
 
 // Disable the Stepper motor by seting the stepper_nENABLE_pin
-inline void DisableStepper(){
+void DisableStepper(){
   GPIO_SetBits(stepper_PORT, stepper_nENABLE_pin);
+}
+
+// return the position of the stepper motor
+uint16_t GetStepperPosition() 
+{
+  return stepper_position;
+}
+
+// Move the stepper to a perticular position. 
+// This is done but comparing the position with the position target and 
+// calling the appropriate step routine.
+void MoveStepperToPosition(uint16_t stepper_position_target){
 }
 
 //------------------------------------------------------------------------------
@@ -92,8 +113,33 @@ inline void DisableStepper(){
 // step the motor forward the number of steps in the argument
 // if the stepper motor reaches a position of kStepperMax, it should stop and 
 // return a MAX_LIMIT error 
-void StepForward(uint16_t number_of_steps){
-  
+uint8_t StepForward(uint16_t number_of_steps){
+  GPIO_SetBits(stepper_PORT, stepper_DIR_pin);
+  if(stepper_position == kStepperMax) return MAX_LIMIT;
+  for (uint16_t i = 0; i < number_of_steps; i++){
+    GPIO_SetBits(stepper_PORT, stepper_STEP_pin);
+    wait_us(kStepDelay);
+    GPIO_ResetBits(stepper_PORT, stepper_STEP_pin);
+    wait_us(kStepDelay);        
+    stepper_position++;
+    if(stepper_position == kStepperMax) return MAX_LIMIT;
+  }
+  return OK;
+}
 
-
+// step the motor backwards the number of steps in the argument
+// if the stepper motor reaches a position of kStepperMax, it should stop and 
+// return a MAX_LIMIT error 
+uint8_t StepBackward(uint16_t number_of_steps){
+  GPIO_ResetBits(stepper_PORT, stepper_DIR_pin);
+  if(stepper_position == 2) return MIN_LIMIT;
+  for (uint16_t i = 0; i < number_of_steps; i++){
+    GPIO_SetBits(stepper_PORT, stepper_STEP_pin);
+    wait_us(kStepDelay);
+    GPIO_ResetBits(stepper_PORT, stepper_STEP_pin);
+    wait_us(kStepDelay);        
+    stepper_position--;
+    if(stepper_position == 2) return MIN_LIMIT;
+  }
+  return OK;
 }

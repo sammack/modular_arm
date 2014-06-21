@@ -9,9 +9,12 @@
 //Main clock frequency
 #define F_CLK          32000000
 
+
 // Error codes
 #define OK              0x02
 #define NOK             0x03
+#define MAX_LIMIT       0x04
+#define MIN_LIMIT       0x05
 
 // Bit definitions 
 

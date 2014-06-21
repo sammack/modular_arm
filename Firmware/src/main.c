@@ -21,11 +21,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 //-------------------------------------------------------------------------         
-// AP1ication APbeacon Firmware           
+// Modular Arm firmware      
 // Main.c - the main fuctions of the firmware
 // Started: May 5 2014
 // Author: Sam MacKenzie 
-// Email: sam.mackenzie@apbeacon.com
+// Email: samtmackenzie@gmail.com
 //-------------------------------------------------------------------------
         
 // Includes //
@@ -35,11 +35,17 @@ SOFTWARE. */
 #include "GlobalDefinitions.h"
 #include "UART.h"
 #include "stm32f0xx_it.h"
+#include "A3967.h"
 
 
 
 int main()
 {
+  ConfigStepper();
+  HomeStepper();
+  EnableStepper();
+  DisableStepper();
+  GetStepperPosition();
+  MoveStepperToPosition(5);
   while(1);
-  return 0;
 }

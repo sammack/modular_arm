@@ -52,8 +52,9 @@ typedef struct
 #define UART1_RX_PinSource           GPIO_PinSource9
 
 
-extern uint8_t Config_UART1(void);
-extern void USART1_IRQHandler(void);
+// configure UART1 as the input
+uint8_t Config_UART1(void);
+void USART1_IRQHandler(void);
 uint8_t UART_write(USART_TypeDef* UARTx, uint8_t message_array[], uint16_t message_length);
 
 #endif
