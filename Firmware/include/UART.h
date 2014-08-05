@@ -37,8 +37,8 @@ SOFTWARE. */
 // UART Data structures
 typedef struct
 {
-  int8_t RX[256];
-  int8_t TX[256];
+  uint8_t RX[256];
+  uint8_t TX[256];
   uint8_t RX_index;
   uint8_t TX_index;
   uint8_t RX_length;
@@ -46,15 +46,17 @@ typedef struct
 }UartBuffers;
 
 #define GPIO_UART1                   GPIOA
-#define UART1_TX_Pin                 GPIO_Pin_8
-#define UART1_TX_PinSource           GPIO_PinSource8
-#define UART1_RX_Pin                 GPIO_Pin_9
-#define UART1_RX_PinSource           GPIO_PinSource9
+#define UART1_TX_Pin                 GPIO_Pin_9
+#define UART1_TX_PinSource           GPIO_PinSource9
+#define UART1_RX_Pin                 GPIO_Pin_10
+#define UART1_RX_PinSource           GPIO_PinSource10
 
 
-// configure UART1 as the input
-uint8_t Config_UART1(void);
-void USART1_IRQHandler(void);
-uint8_t UART_write(USART_TypeDef* UARTx, uint8_t message_array[], uint16_t message_length);
+uint8_t ConfigUartSlave(void);
+uint8_t UartSlaveWrite(USART_TypeDef* UARTx, uint8_t message_array[], uint16_t message_length);
+void SlaveRxInterrupt(void);
+void SlaveTxInterrupt(void);
+uint8_t CheckUartBuffer(void);
+uint8_t PutOnTxBuffer(uint8_t* command, uint8_t length);
 
-#endif
+#endif // UART_H

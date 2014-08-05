@@ -33,7 +33,6 @@ SOFTWARE. */
 #include "GlobalDefinitions.h"
 
 //Warning : Delay functions are dependant on SystemCoreClock being correct
-extern uint32_t SystemCoreClock = F_CLK; 
 
 
 //------------------------------------------------------------------------------

@@ -6,6 +6,8 @@
 // Email: sam.mackenzie@apbeacon.com
 //-------------------------------------------------------------------------
 
+
+
 //Main clock frequency
 #define F_CLK          32000000
 
@@ -15,6 +17,8 @@
 #define NOK             0x03
 #define MAX_LIMIT       0x04
 #define MIN_LIMIT       0x05
+#define BAD_COMMAND     0x06
+#define NO_COMMAND     0x06
 
 // Bit definitions 
 
@@ -69,3 +73,10 @@
 #define GPIO_Pin_13_mul         0x04000000
 #define GPIO_Pin_14_mul         0x10000000
 #define GPIO_Pin_15_mul         0x40000000
+
+
+  #define USARTx                           USART1
+  #define USARTx_CLK                       RCC_APB2Periph_USART1
+  #define USARTx_APBPERIPHCLOCK            RCC_APB2PeriphClockCmd
+  #define USARTx_IRQn                      USART1_IRQn
+  #define USARTx_IRQHandler                USART1_IRQHandler

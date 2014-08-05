@@ -20,43 +20,26 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-//-------------------------------------------------------------------------         
-// Modular Arm firmware      
-// Main.c - the main fuctions of the firmware
-// Started: May 5 2014
+//-------------------------------------------------------------------------
+// Modular Arm Firmware
+// servo.h - file for server control
+// Started: June 17 2014
 // Author: Sam MacKenzie 
 // Email: samtmackenzie@gmail.com
 //-------------------------------------------------------------------------
-        
-// Includes //
-#include "stm32f0xx.h"
-#include "utility.h"
-#include "version.h"
-#include "GlobalDefinitions.h"
-#include "UART.h"
-#include "A3967.h"
-#include "servo.h"
-#include "stm32f0xx_it.h"
-#include "TB6612.h"
 
-int main()
-{
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
-  
-  ConfigUartSlave();   
-  ConfigServo(); 
-  ConfigTb();
-  
-  uint8_t return_message[2] = {'O', 'K'};
-  PutOnTxBuffer(return_message, 2);
-  
-  while(1)
-  {
-    // check if there is a new command on the UART buffer.
-    CheckUartBuffer();
-    wait_ms(5);
-    DecrementServoTimer();
-    DecrementTbTimer();
-    
-  }
-}
+#ifndef TB6612_H
+#define TB6612_H
+
+#define tb_PWM_pin           GPIO_Pin_0
+#define tb_IN1_pin           GPIO_Pin_1
+#define tb_IN2_pin           GPIO_Pin_2
+#define tb_PORT              GPIOA
+
+extern void ConfigTb();
+extern void TbMoveClockwise(uint8_t time, uint16_t speed);
+extern void TbMoveCounterClockwise(uint8_t time, uint16_t speed);
+extern void DecrementTbTimer(void);
+extern void TbStop(void);
+
+#endif // TB6612_H

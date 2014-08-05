@@ -32,6 +32,7 @@
 #include "stm32f0xx.h"
 #include "UART.h"
 
+#include "GlobalDefinitions.h"
 
 /** @addtogroup STM32F0xx_StdPeriph_Examples
   * @{
@@ -56,6 +57,8 @@ UartBuffers Uart1_buffers;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
+
+
 /******************************************************************************/
 /*            Cortex-M0 Processor Exceptions Handlers                         */
 /******************************************************************************/
@@ -74,9 +77,9 @@ void NMI_Handler(void)
   * @param  None
   * @retval None
   */
-void HardFault_Handler(void)
+ void HardFault_Handler(void)
 {
-  /* Go to infinite loop when Hard Fault exception occurs */
+
   while (1)
   {
   }
@@ -123,23 +126,23 @@ void USART1_IRQHandler(void)
   if (USART_GetITStatus(USART1, USART_IT_TXE) == SET)   
   {
     USART_ITConfig(USART1, USART_IT_TXE, DISABLE);
-    if(Uart1_buffers.TX_index == Uart1_buffers.TX_length)
-    {
-      Uart1_buffers.TX_index = 0;
-      return;
-    }
-    USART_SendData(USART1, Uart1_buffers.TX[Uart1_buffers.TX_index++]);
-    USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
+    SlaveTxInterrupt();
     return;
   }
-  //  check if it's a recieve empty interrupt
+  //  check if it's a recieve not empty interrupt
   if (USART_GetITStatus(USART1, USART_IT_RXNE) == SET)
   {
     USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);
-    Uart1_buffers.RX[Uart1_buffers.RX_index++] = USART_ReceiveData(USART1);
+    SlaveRxInterrupt();
     USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
   }
 
+}
+
+
+void USART2_IRQHandler(void)
+{
+  while(1);
 }
 /******************************************************************************/
 /*                 STM32F0xx Peripherals Interrupt Handlers                   */
@@ -164,6 +167,7 @@ void USART1_IRQHandler(void)
 /**
   * @}
   */
+
 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

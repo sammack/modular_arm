@@ -46,7 +46,8 @@ void HardFault_Handler(void);
 void SVC_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
-void USARTx_IRQHandler(void);
+void USART1_IRQHandler(void);
+void USART2_IRQHandler(void);
 
 #ifdef __cplusplus
 }

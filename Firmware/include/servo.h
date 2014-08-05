@@ -20,43 +20,27 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-//-------------------------------------------------------------------------         
-// Modular Arm firmware      
-// Main.c - the main fuctions of the firmware
-// Started: May 5 2014
+//-------------------------------------------------------------------------
+// Modular Arm Firmware
+// servo.h - file for server control
+// Started: June 17 2014
 // Author: Sam MacKenzie 
 // Email: samtmackenzie@gmail.com
 //-------------------------------------------------------------------------
-        
-// Includes //
-#include "stm32f0xx.h"
-#include "utility.h"
-#include "version.h"
-#include "GlobalDefinitions.h"
-#include "UART.h"
-#include "A3967.h"
-#include "servo.h"
-#include "stm32f0xx_it.h"
-#include "TB6612.h"
 
-int main()
-{
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
-  
-  ConfigUartSlave();   
-  ConfigServo(); 
-  ConfigTb();
-  
-  uint8_t return_message[2] = {'O', 'K'};
-  PutOnTxBuffer(return_message, 2);
-  
-  while(1)
-  {
-    // check if there is a new command on the UART buffer.
-    CheckUartBuffer();
-    wait_ms(5);
-    DecrementServoTimer();
-    DecrementTbTimer();
-    
-  }
-}
+#ifndef SERVO_H
+#define SERVO_H
+
+#define servo_PWM_pin           GPIO_Pin_8
+#define servo_PORT              GPIOA
+#define servo_MOVE_CW           'F'
+#define servo_MOVE_CCW          'B'
+#define servo_STOP              'S'
+
+extern void ConfigServo();
+extern void MoveClockwise(uint8_t time, uint8_t speed);
+extern void MoveCounterClockwise(uint8_t time, uint8_t speed);
+extern void DecrementServoTimer(void);
+extern void ServoStop(void);
+
+#endif // SERVO_H

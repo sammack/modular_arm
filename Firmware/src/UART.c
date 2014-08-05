@@ -29,8 +29,18 @@ SOFTWARE. */
 //-------------------------------------------------------------------------     
 // Includes  
 #include "stm32f0xx.h"
-#include  "UART.h"
+#include "UART.h"
 #include "GlobalDefinitions.h"
+#include "stm32f0xx_it.h"
+#include "servo.h"
+#include "TB6612.h"
+
+//------------------------------------------------------------------------------
+// PUBLIC VARIABLES
+//------------------------------------------------------------------------------
+
+ UartBuffers uart_slave_buffer = {.TX_index = 0, .RX_index = 0};
+
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTION DEFINITIONS
@@ -50,7 +60,7 @@ uint8_t ConfigUartSlave(void)
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
   GPIO_Init(GPIO_UART1, &GPIO_InitStructure);
   GPIO_PinAFConfig(GPIO_UART1, UART1_TX_PinSource, GPIO_AF_1);
   GPIO_PinAFConfig(GPIO_UART1, UART1_RX_PinSource, GPIO_AF_1);
@@ -69,10 +79,74 @@ uint8_t ConfigUartSlave(void)
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
   
-  USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
-  
+  USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
   return OK;
 }
 
+uint8_t PutOnTxBuffer(uint8_t* command, uint8_t length)
+{
+  
+  for(uint8_t i = 0; i < length; i++)
+  {
+    //uart_slave_buffer.TX[uart_slave_buffer.RX_index + i] = command[i];
+    USART_SendData(USART1, command[i]);
+  }
+  
+  return OK;
+}
+  
+  
+// Check the UART RX buffer and see if you need to do anything
+uint8_t CheckUartBuffer(void)
+{
+  uint8_t return_value = NO_COMMAND;
+  // check for the stop character 
+  if (uart_slave_buffer.RX[uart_slave_buffer.RX_index] == 0x0D){
+    uart_slave_buffer.RX_index++;
+    return_value = OK;
+    uint8_t return_message[2] = {'O', 'K'};
+    PutOnTxBuffer(return_message, 2);
+    //if there is a command copy it and the arguments to temp 
+    uint8_t command = uart_slave_buffer.RX[uart_slave_buffer.RX_index - 4];
+    uint8_t argument1 = uart_slave_buffer.RX[uart_slave_buffer.RX_index - 3];
+    uint8_t argument2 = uart_slave_buffer.RX[uart_slave_buffer.RX_index - 2];
+    switch(command)
+    {
+      case 'L':
+          MoveClockwise(argument1*10, argument2);
+          break;
+      case 'R':
+          MoveCounterClockwise(argument1*10, argument2);
+          break;
+      case 'C':
+          ServoStop();
+          break;
+      case 'F':
+          TbMoveClockwise(argument1*10, argument2*100);
+          break;
+      case 'B':
+          TbMoveCounterClockwise(argument1*10, argument2*100);
+          break;
+      case 'S':
+          TbStop();
+          break;
+      default:
+          return BAD_COMMAND;
+    }
+  }
+  return return_value;
+}
+        
+// Called by the interrup handler in stm32f0xx_it.c
+// 
+void SlaveRxInterrupt(void)
+{
+  uart_slave_buffer.RX_index++;
+  uart_slave_buffer.RX[uart_slave_buffer.RX_index] = USART_ReceiveData(USART1);
+}
 
-
+void SlaveTxInterrupt(void)
+{
+  uart_slave_buffer.TX_index++;
+  USART_SendData(USART1, uart_slave_buffer.TX[uart_slave_buffer.TX_index]);
+}
