@@ -20,36 +20,43 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-//-------------------------------------------------------------------------         
-// Modular Arm firmware      
-// Main.c - the main fuctions of the firmware
-// Started: May 5 2014
+//-------------------------------------------------------------------------
+// Modular Arm firmware
+// UART.h - configuration and communications for the UARTs
+// Started: June 17 2014
 // Author: Sam MacKenzie 
 // Email: samtmackenzie@gmail.com
 //-------------------------------------------------------------------------
-        
-// Includes //
-#include "stm32f0xx.h"
-#include "utility.h"
-#include "version.h"
-#include "GlobalDefinitions.h"
-#include "UART.h"
-#include "A3967.h"
-#include "servo.h"
-#include "stm32f0xx_it.h"
-#include "TB6612.h"
 
-int main()
+#ifndef UART_H
+#define UART_H
+
+#include <stdint.h>
+#include "stm32f0xx.h"
+
+// UART Data structures
+typedef struct
 {
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
-  
-  ConfigUartSlave();   
-  
-  uint8_t return_message[2] = {'O', 'K'};
-  PutOnTxBuffer(return_message, 2);
-  
-  while(1)
-  {
-    
-  }
-}
+  uint8_t RX[256];
+  uint8_t TX[256];
+  uint8_t RX_index;
+  uint8_t TX_index;
+  uint8_t RX_length;
+  uint8_t TX_length;
+}UartBuffers;
+
+#define GPIO_UART1                   GPIOA
+#define UART1_TX_Pin                 GPIO_Pin_9
+#define UART1_TX_PinSource           GPIO_PinSource9
+#define UART1_RX_Pin                 GPIO_Pin_10
+#define UART1_RX_PinSource           GPIO_PinSource10
+
+
+uint8_t ConfigUartSlave(void);
+uint8_t UartSlaveWrite(USART_TypeDef* UARTx, uint8_t message_array[], uint16_t message_length);
+void SlaveRxInterrupt(void);
+void SlaveTxInterrupt(void);
+uint8_t CheckUartBuffer(void);
+uint8_t PutOnTxBuffer(uint8_t* command, uint8_t length);
+
+#endif // UART_H

@@ -3,7 +3,7 @@
 <project>
   <fileVersion>2</fileVersion>
   <configuration>
-    <name>STM32F4-Discovery</name>
+    <name>Coordinator</name>
     <toolchain>
       <name>ARM</name>
     </toolchain>
@@ -45,7 +45,7 @@
         </option>
         <option>
           <name>MemFile</name>
-          <state>$TOOLKIT_DIR$\CONFIG\debugger\ST\STM32F407VG.ddf</state>
+          <state>$TOOLKIT_DIR$\CONFIG\debugger\ST\STM32F051x8.ddf</state>
         </option>
         <option>
           <name>RunToEnable</name>
@@ -81,7 +81,7 @@
         </option>
         <option>
           <name>OCProductVersion</name>
-          <state>6.70.2.6303</state>
+          <state>7.10.3.6927</state>
         </option>
         <option>
           <name>OCDynDriverList</name>
@@ -117,7 +117,7 @@
         </option>
         <option>
           <name>FlashLoadersV3</name>
-          <state>$TOOLKIT_DIR$\config\flashloader\ST\FlashSTM32F4xxx.board</state>
+          <state>$TOOLKIT_DIR$\config\flashloader\ST\FlashSTM32F051x8.board</state>
         </option>
         <option>
           <name>OCImagesSuppressCheck1</name>
@@ -729,7 +729,7 @@
         <debug>1</debug>
         <option>
           <name>JLinkSpeed</name>
-          <state>32</state>
+          <state>1000</state>
         </option>
         <option>
           <name>CCJLinkDoLogfile</name>
@@ -749,7 +749,7 @@
         </option>
         <option>
           <name>JLinkInitialSpeed</name>
-          <state>32</state>
+          <state>1000</state>
         </option>
         <option>
           <name>CCDoJlinkMultiTarget</name>
@@ -1001,7 +1001,7 @@
         <option>
           <name>CEmuCommPort</name>
           <version>0</version>
-          <state>0</state>
+          <state>4</state>
         </option>
         <option>
           <name>jtago</name>
@@ -1068,7 +1068,7 @@
         </option>
         <option>
           <name>CCPEMicroJtagSpeed</name>
-          <state>#UNINITIALIZED#</state>
+          <state>5000</state>
         </option>
         <option>
           <name>CCJPEMicroShowSettings</name>
@@ -1123,7 +1123,7 @@
         <debug>1</debug>
         <option>
           <name>CRDIDriverDll</name>
-          <state>###Uninitialized###</state>
+          <state>Browse to your RDI driver</state>
         </option>
         <option>
           <name>CRDILogFileCheck</name>
@@ -1193,11 +1193,11 @@
         <option>
           <name>CCSTLinkResetList</name>
           <version>1</version>
-          <state>2</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCCpuClockEdit</name>
-          <state>168.0</state>
+          <state>72.0</state>
         </option>
         <option>
           <name>CCSwoClockAuto</name>
@@ -1218,7 +1218,7 @@
         <debug>1</debug>
         <option>
           <name>CThirdPartyDriverDll</name>
-          <state>###Uninitialized###</state>
+          <state>Browse to your third-party driver</state>
         </option>
         <option>
           <name>CThirdPartyLogFileCheck</name>
@@ -1255,16 +1255,16 @@
         </option>
         <option>
           <name>TIPackage</name>
-          <state></state>
+          <state>C:\ti\ccs_base</state>
         </option>
         <option>
           <name>CCXds100InterfaceList</name>
           <version>1</version>
-          <state>0</state>
+          <state>7</state>
         </option>
         <option>
           <name>BoardFile</name>
-          <state></state>
+          <state>Browse to your board file</state>
         </option>
         <option>
           <name>DoLogfile</name>

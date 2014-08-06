@@ -32,7 +32,7 @@ Email: samtmackenzie@gmail.com
 #define __BASE_MODULE_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal.h"
+#include "stm32f0xx.h"
 
 /* Constants -----------------------------------------------------------------*/
 

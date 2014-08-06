@@ -20,32 +20,22 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-/*-------------------------------------------------------------------------
-Modular Arm firmware - coordinator
-leds.h
-Started: Aug 6 2014
-Author: Sam MacKenzie 
-Email: samtmackenzie@gmail.com
----------------------------------------------------------------------------*/   
 
-#ifndef __LEDS_H
-#define __LEDS_H
+//-------------------------------------------------------------------------
+// Modular Arm Firmware
+// utility.h - extra functions used by many files
+// Started: May 5 2014
+// Author: Sam MacKenzie 
+// Email: samtmackenzie@gmail.com
+//-------------------------------------------------------------------------
 
-/* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal.h"
+#ifndef UTILITY_H
+#define UTILITY_H
+#include <stdint.h>
 
-/* constants --------------------------------------------------------*/
+// wait the number of ms passed to the function
+void wait_ms(uint16_t delay_ms);
+// wait the number of us massed to the function
+void wait_us(uint16_t delay_us);
 
-#define LED_RED         GPIO_PIN_14
-#define LED_ORANGE      GPIO_PIN_13
-#define LED_BLUE        GPIO_PIN_14
-#define LED_PORT        GPIOD
-
-/* Exported functions ------------------------------------------------------- */
-/* Set up the GPIO ports for the 3 LEDs */
-void LEDS_InitializeLeds(void);
-/* turn on the LED, argument is LED_RED, LED_BLUE, or LED_ORANGE */
-void LEDS_TurnOnLed(uint16_t ledToTurnOn);
-void LEDS_TurnOffLed(uint16_t ledToTurnOff);
-
-#endif /* __LEDS_H */
+#endif

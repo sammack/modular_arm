@@ -63,8 +63,3 @@ void ElboModule::FindLimits(){
   // ask the elbo to find it's limits
   limits_found = true;
 }
-
-
-
-
- 

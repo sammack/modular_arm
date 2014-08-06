@@ -32,7 +32,7 @@ Email: samtmackenzie@gmail.com
 #define __ELBO_MODULE_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal.h"
+#include "stm32f0xx.h"
 #include "base_module.hpp"
 
 /* Constants -----------------------------------------------------------------*/
