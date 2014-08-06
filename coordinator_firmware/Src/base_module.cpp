@@ -22,7 +22,7 @@ SOFTWARE. */
 
 /*-------------------------------------------------------------------------
 Modular Arm firmware - coordinator
-main.cpp
+base_module.cpp
 Started: Aug 6 2014
 Author: Sam MacKenzie 
 Email: samtmackenzie@gmail.com
@@ -31,15 +31,8 @@ Email: samtmackenzie@gmail.com
 /* Includes ------------------------------------------------------------------*/
 #include "base_module.hpp"
 
-
 /* Class definition ---------------------------------------------------------*/
 
-class BaseModules {
-  uint8_t module_type;
-public:
-  BaseModule()
-    module_type = BASE_MODULE;
-                    
-                    
-                    
-                    
+BaseModule::BaseModule() {} // empty constructor on purpose
+
+uint8_t BaseModule::GetModuleType() { return BASE_MODULE; }

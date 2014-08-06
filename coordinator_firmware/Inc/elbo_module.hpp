@@ -22,36 +22,46 @@ SOFTWARE. */
 
 /*-------------------------------------------------------------------------
 Modular Arm firmware - coordinator
-leds.c
+base_module.hpp
 Started: Aug 6 2014
 Author: Sam MacKenzie 
 Email: samtmackenzie@gmail.com
----------------------------------------------------------------------------*/   
+------------------------------------------------------------------------------*/
+
+#ifndef __ELBO_MODULE_H
+#define __ELBO_MODULE_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "leds.h"
+#include "stm32f4xx_hal.h"
+#include "base_module.hpp"
 
-/* Public functions ----------------------------------------------------------*/   
-void LEDS_InitializeLeds(void)
-{
-  GPIO_InitTypeDef   GPIO_InitStructure;
-  
-  /* Configure LED pins as output push pull */
-  GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStructure.Pull = GPIO_NOPULL;
-  GPIO_InitStructure.Pin =  LED_RED | LED_ORANGE | LED_BLUE;
-  HAL_GPIO_Init(LED_PORT, &GPIO_InitStructure);
-  HAL_GPIO_WritePin(LED_PORT, LED_RED, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(LED_PORT, LED_ORANGE, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(LED_PORT, LED_BLUE, GPIO_PIN_SET);
-}
+/* Constants -----------------------------------------------------------------*/
 
-void LEDS_TurnOnLed(uint16_t ledToTurnOn)
-{
-   HAL_GPIO_WritePin(LED_PORT, ledToTurnOn, GPIO_PIN_SET);
-}
+#define ELBO_MODULE     0x01
 
-void LEDS_TurnOffLed(uint16_t ledToTurnOff)
-{
-   HAL_GPIO_WritePin(LED_PORT, ledToTurnOff, GPIO_PIN_RESET);
-}
+/* Class interface ------------------------------------------------------- */
+
+class ElboModule : public BaseModule {
+  uint8_t module_position;  // the position in the line of modules
+  uint16_t max_speed;
+  int16_t min_angle;    // max and min angle, can be set or found automatically
+  int16_t max_angle;    // with FindLimits() 
+  int16_t current_angle;
+  bool limits_found;    // have the limits been found by the module
+public:
+  ElboModule(uint8_t position);
+  uint8_t GetModuleType();
+  int16_t GetMaxSpeed();
+  int16_t GetMinAngle();
+  int16_t GetMaxAngle();
+  int16_t GetCurrentAngle();
+  bool GetLimitsFound();
+  void SetMaxAngle(int16_t);
+  void SetMinAngle(int16_t);
+  bool GetLimitFound();
+  void ReadParameters();
+  void MoveElbo(uint16_t, int16_t);
+  void FindLimits();
+};
+
+#endif /* __ELBO_MODULE_H */

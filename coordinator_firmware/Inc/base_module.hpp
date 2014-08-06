@@ -22,20 +22,31 @@ SOFTWARE. */
 
 /*-------------------------------------------------------------------------
 Modular Arm firmware - coordinator
-main.cpp
+base_module.hpp
 Started: Aug 6 2014
 Author: Sam MacKenzie 
 Email: samtmackenzie@gmail.com
----------------------------------------------------------------------------*/
+------------------------------------------------------------------------------*/
 
 #ifndef __BASE_MODULE_H
 #define __BASE_MODULE_H
 
-/*------ Constants -------------------------------------------------------*/
+/* Includes ------------------------------------------------------------------*/
+#include "stm32f4xx_hal.h"
 
-#define BASE_MODULE
+/* Constants -----------------------------------------------------------------*/
+
+#define BASE_MODULE     0x00
+#define ELBO_MODULE     0x01
+#define ROTATOR_MODULE  0x02
 
 
+/* Class interface ------------------------------------------------------- */
 
+class BaseModule {
+public:
+  BaseModule();
+  uint8_t GetModuleType();
+};
 
 #endif /* __BASE_MODULE_H */

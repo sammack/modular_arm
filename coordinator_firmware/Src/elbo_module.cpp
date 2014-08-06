@@ -22,36 +22,49 @@ SOFTWARE. */
 
 /*-------------------------------------------------------------------------
 Modular Arm firmware - coordinator
-leds.c
+elbo_module.cpp
 Started: Aug 6 2014
 Author: Sam MacKenzie 
 Email: samtmackenzie@gmail.com
 ---------------------------------------------------------------------------*/   
 
 /* Includes ------------------------------------------------------------------*/
-#include "leds.h"
+#include "elbo_module.hpp"
 
-/* Public functions ----------------------------------------------------------*/   
-void LEDS_InitializeLeds(void)
-{
-  GPIO_InitTypeDef   GPIO_InitStructure;
+
+ElboModule::ElboModule(uint8_t position){
+  module_position = position;
+  max_speed = 0;
+  min_angle = 0;
+  max_angle = 0;
+  current_angle = 0;
+  limits_found = false;
+}
+
+uint8_t ElboModule::GetModuleType() { return ELBO_MODULE; }
+int16_t ElboModule::GetMaxSpeed() { return max_speed; }
+int16_t ElboModule::GetMinAngle() { return min_angle; }
+int16_t ElboModule::GetMaxAngle() { return max_angle; }
+int16_t ElboModule::GetCurrentAngle() { return current_angle; }
+bool ElboModule::GetLimitsFound() { return limits_found; }
+void ElboModule::SetMaxAngle(int16_t angle){ max_angle = angle; }
+void ElboModule::SetMinAngle(int16_t angle){ min_angle = angle; }
+
+
+void ElboModule::ReadParameters(){
+  // read the parameters over the UART
+}
   
-  /* Configure LED pins as output push pull */
-  GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStructure.Pull = GPIO_NOPULL;
-  GPIO_InitStructure.Pin =  LED_RED | LED_ORANGE | LED_BLUE;
-  HAL_GPIO_Init(LED_PORT, &GPIO_InitStructure);
-  HAL_GPIO_WritePin(LED_PORT, LED_RED, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(LED_PORT, LED_ORANGE, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(LED_PORT, LED_BLUE, GPIO_PIN_SET);
+void ElboModule::MoveElbo(uint16_t angle, int16_t speed){
+  // write the angle position and speed over the UART
 }
 
-void LEDS_TurnOnLed(uint16_t ledToTurnOn)
-{
-   HAL_GPIO_WritePin(LED_PORT, ledToTurnOn, GPIO_PIN_SET);
+void ElboModule::FindLimits(){
+  // ask the elbo to find it's limits
+  limits_found = true;
 }
 
-void LEDS_TurnOffLed(uint16_t ledToTurnOff)
-{
-   HAL_GPIO_WritePin(LED_PORT, ledToTurnOff, GPIO_PIN_RESET);
-}
+
+
+
+ 

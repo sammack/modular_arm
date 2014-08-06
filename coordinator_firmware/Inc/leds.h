@@ -22,7 +22,7 @@ SOFTWARE. */
 
 /*-------------------------------------------------------------------------
 Modular Arm firmware - coordinator
-main.cpp
+leds.h
 Started: Aug 6 2014
 Author: Sam MacKenzie 
 Email: samtmackenzie@gmail.com
@@ -36,12 +36,10 @@ Email: samtmackenzie@gmail.com
 
 /* constants --------------------------------------------------------*/
 
-
 #define LED_RED         GPIO_PIN_14
 #define LED_ORANGE      GPIO_PIN_13
 #define LED_BLUE        GPIO_PIN_14
 #define LED_PORT        GPIOD
-
 
 /* Exported functions ------------------------------------------------------- */
 /* Set up the GPIO ports for the 3 LEDs */
