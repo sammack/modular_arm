@@ -31,9 +31,9 @@ Email: samtmackenzie@gmail.com
 /* Includes ------------------------------------------------------------------*/
 #include "base_module.hpp"
 #include "stm32f0xx.h"
-#include "UART.h"
+#include "UART.hpp"
 #include "GlobalDefinitions.h"
-#include "stm32f0xx_it.h"
+#include "stm32f0xx_it.hpp"
 
 /* Class definition ---------------------------------------------------------*/
 
