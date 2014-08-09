@@ -36,7 +36,7 @@ SOFTWARE. */
 #include "UART.hpp"
 #include "base_module.hpp"
 #include "elbo_module.hpp"
-#include "stm32f0xx_it.h"
+#include "stm32f0xx_it.hpp"
 
 int main()
 {
@@ -49,6 +49,8 @@ int main()
   
   module->SetMaxAngle(10);
   static int8_t limitreturn = module->GetMaxAngle();
+  
+  USART_SendData(USART1, 'A');
   
   while(1)
   {

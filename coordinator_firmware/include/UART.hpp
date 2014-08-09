@@ -50,6 +50,7 @@ typedef struct
 #define UART1_TX_PinSource           GPIO_PinSource9
 #define UART1_RX_Pin                 GPIO_Pin_10
 #define UART1_RX_PinSource           GPIO_PinSource10
+#define START_BYTE                   'G'
 
 
 uint8_t ConfigUart(void);

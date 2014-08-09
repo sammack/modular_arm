@@ -32,13 +32,13 @@ SOFTWARE. */
 #include "UART.hpp"
 #include "GlobalDefinitions.h"
 #include "stm32f0xx_it.hpp"
+#include "crc.h"
 
 //------------------------------------------------------------------------------
 // PUBLIC VARIABLES
 //------------------------------------------------------------------------------
 
- UartBuffers uart_buffer;// = {.TX_index = 0, .RX_index = 0};
-
+ UartBuffers uart_buffer;
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTION DEFINITIONS
@@ -78,6 +78,11 @@ uint8_t ConfigUart(void)
   NVIC_Init(&NVIC_InitStructure);
   
   USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+  
+  uart_buffer.TX_index = 0;
+  uart_buffer.RX_index = 0;
+  crcSlow(uart_buffer.RX, 4);
+  crcInit();
   return OK;
 }
 
@@ -91,7 +96,20 @@ uint8_t PutOnTxBuffer(uint8_t* command, uint8_t length)
   
   return OK;
 }
-  
+
+uint8_t ConstructMessage(uint8_t node_address, uint8_t message_length, uint8_t* command){
+  uint8_t message[255];
+  message[0] = START_BYTE;
+  message[1] = node_address;
+  message[2] = message_length;
+  for(uint8_t i = 0; i < message_length; i++){
+    message[i+3] = command[i];
+  }
+  uint16_t crc = crcFast(message, message_length);
+  message[3 + message_length] = crc;
+  PutOnTxBuffer(message, message_length + 5);
+  return OK;
+}
   
 // Check the UART RX buffer and see if you need to do anything
 uint8_t CheckUartBuffer(void)
@@ -99,7 +117,6 @@ uint8_t CheckUartBuffer(void)
   uint8_t return_value = NO_COMMAND;
   // check for the stop character 
   if (uart_buffer.RX[uart_buffer.RX_index] == 0x0D){
-    
     
   }
   return return_value;
