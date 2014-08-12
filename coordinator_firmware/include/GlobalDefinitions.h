@@ -18,7 +18,8 @@
 #define MAX_LIMIT       0x04
 #define MIN_LIMIT       0x05
 #define BAD_COMMAND     0x06
-#define NO_COMMAND     0x06
+#define NO_COMMAND      0x07
+#define BAD_CRC         0x08
 
 // Bit definitions 
 

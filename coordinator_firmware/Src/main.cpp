@@ -42,18 +42,15 @@ int main()
 {
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
   ConfigUart(); 
-  uint8_t return_message[2] = {'O', 'K'};
-  PutOnTxBuffer(return_message, 2);
   
   ElboModule *module = new ElboModule(1);
   
   module->SetMaxAngle(10);
-  static int8_t limitreturn = module->GetMaxAngle();
+  module->MoveElbo(0x04d4,0xdf43);
   
-  USART_SendData(USART1, 'A');
+  static int8_t limitreturn = module->GetMaxAngle();
   
   while(1)
   {
-    
   }
 }

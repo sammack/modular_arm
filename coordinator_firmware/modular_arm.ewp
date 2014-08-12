@@ -1037,7 +1037,7 @@
     <name>$PROJ_DIR$\Src\base_module.cpp</name>
   </file>
   <file>
-    <name>$PROJ_DIR$\Src\crc.c</name>
+    <name>$PROJ_DIR$\Src\crc.cpp</name>
   </file>
   <file>
     <name>$PROJ_DIR$\Src\elbo_module.cpp</name>

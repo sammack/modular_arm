@@ -59,5 +59,6 @@ void RxInterrupt(void);
 void TxInterrupt(void);
 uint8_t CheckUartBuffer(void);
 uint8_t PutOnTxBuffer(uint8_t* command, uint8_t length);
+uint8_t ConstructMessage(uint8_t node_address, uint8_t message_length, uint8_t* command);
 
 #endif // UART_H

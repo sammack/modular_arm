@@ -30,6 +30,10 @@ Email: samtmackenzie@gmail.com
 
 /* Includes ------------------------------------------------------------------*/
 #include "elbo_module.hpp"
+#include "crc.hpp"
+#include "stm32f0xx.h"
+#include "GlobalDefinitions.h"
+#include "UART.hpp"
 
 
 ElboModule::ElboModule(uint8_t position){
@@ -55,11 +59,36 @@ void ElboModule::ReadParameters(){
   // read the parameters over the UART
 }
   
-void ElboModule::MoveElbo(uint16_t angle, int16_t speed){
-  // write the angle position and speed over the UART
+void ElboModule::MoveElbo(int16_t angle, uint16_t speed){
+  int8_t command[5]; 
+  command[0] = ELBO_MOVE_MESSAGE;
+  command[1] = angle >> 8;
+  command[2] = angle;
+  command[3] = speed >> 8;
+  command[4] = speed;
+  ConstructMessage(module_position, 5, (uint8_t*)command);
 }
 
 void ElboModule::FindLimits(){
-  // ask the elbo to find it's limits
-  limits_found = true;
+}
+
+uint8_t ElboModule::ParseMessage(int8_t* message, uint8_t message_length){
+  uint16_t transmitted_crc = (int16_t)message[message_length - 2];
+  uint16_t calculated_crc = crcFast((uint8_t*)message, message_length - 2);
+  if(transmitted_crc != calculated_crc)
+    return BAD_CRC;
+  int8_t command = message[1];
+  switch(command)
+  {
+  case LIMITS_RETURNED:
+    min_angle = message[2] + (message[3] << 8);
+    max_angle = message[4] + (message[5] << 8);
+    limits_found = true;
+    break;
+  case POSITION_RETURNED:
+    current_angle = message[2] + (message[3] << 8);
+    limits_found = true;
+    break;
+  }
+  return OK;
 }

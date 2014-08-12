@@ -37,7 +37,14 @@ Email: samtmackenzie@gmail.com
 
 /* Constants -----------------------------------------------------------------*/
 
-#define ELBO_MODULE     0x01
+#define ELBO_GET_PARAM_MESSAGE 0x01
+#define ELBO_MOVE_MESSAGE 0x02
+#define ELBO_STOP_MESSAGE 0x03
+#define GET_LIMITS 0x04
+#define LIMITS_RETURNED 0x05
+#define GET_POSITION 0x06
+#define POSITION_RETURNED 0x07
+
 
 /* Class interface ------------------------------------------------------- */
 
@@ -60,8 +67,9 @@ public:
   void SetMinAngle(int16_t);
   bool GetLimitFound();
   void ReadParameters();
-  void MoveElbo(uint16_t, int16_t);
+  void MoveElbo(int16_t, uint16_t);
   void FindLimits();
+  uint8_t ParseMessage(int8_t*, uint8_t);
 };
 
 #endif /* __ELBO_MODULE_H */

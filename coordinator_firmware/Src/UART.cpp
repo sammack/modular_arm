@@ -32,7 +32,7 @@ SOFTWARE. */
 #include "UART.hpp"
 #include "GlobalDefinitions.h"
 #include "stm32f0xx_it.hpp"
-#include "crc.h"
+#include "crc.hpp"
 
 //------------------------------------------------------------------------------
 // PUBLIC VARIABLES
@@ -81,7 +81,6 @@ uint8_t ConfigUart(void)
   
   uart_buffer.TX_index = 0;
   uart_buffer.RX_index = 0;
-  crcSlow(uart_buffer.RX, 4);
   crcInit();
   return OK;
 }
@@ -93,11 +92,11 @@ uint8_t PutOnTxBuffer(uint8_t* command, uint8_t length)
   {
     uart_buffer.TX[uart_buffer.RX_index + i] = command[i];
   }
-  
   return OK;
 }
 
-uint8_t ConstructMessage(uint8_t node_address, uint8_t message_length, uint8_t* command){
+uint8_t ConstructMessage(uint8_t node_address, uint8_t message_length, uint8_t* command)
+{
   uint8_t message[255];
   message[0] = START_BYTE;
   message[1] = node_address;
@@ -105,12 +104,17 @@ uint8_t ConstructMessage(uint8_t node_address, uint8_t message_length, uint8_t* 
   for(uint8_t i = 0; i < message_length; i++){
     message[i+3] = command[i];
   }
-  uint16_t crc = crcFast(message, message_length);
-  message[3 + message_length] = crc;
+  uint16_t crc = crcFast(message, message_length + 2);
+  message[3 + message_length] = crc >> 8;
+  message[4 + message_length] = crc;
   PutOnTxBuffer(message, message_length + 5);
+  
+  USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
   return OK;
 }
   
+
+
 // Check the UART RX buffer and see if you need to do anything
 uint8_t CheckUartBuffer(void)
 {
@@ -134,4 +138,6 @@ void TxInterrupt(void)
 {
   uart_buffer.TX_index++;
   USART_SendData(USART1, uart_buffer.TX[uart_buffer.TX_index]);
+  if(uart_buffer.TX_length != uart_buffer.TX_index)
+    USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
 }
